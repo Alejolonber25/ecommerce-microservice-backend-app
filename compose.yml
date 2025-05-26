@@ -1,70 +1,76 @@
+x-common-env: &common-spring-env
+  SPRING_PROFILES_ACTIVE: dev
+  SPRING_ZIPKIN_BASE_URL: http://zipkin:9411
+  EUREKA_CLIENT_REGION: default
+  EUREKA_CLIENT_AVAILABILITYZONES_DEFAULT: myzone
+  EUREKA_CLIENT_SERVICEURL_MYZONE: http://service-discovery-container:8761/eureka
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-discovery-container:8761/eureka/
 
-version: '3'
 services:
-  zipkin-container:
-    image: openzipkin/zipkin
-    ports:
-      - 9411:9411
-  service-discovery-container:
-    image: selimhorri/service-discovery-ecommerce-boot:0.1.0
-    ports:
-      - 8761:8761
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-  cloud-config-container:
-    image: selimhorri/cloud-config-ecommerce-boot:0.1.0
-    ports:
-      - 9296:9296
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
   api-gateway-container:
-    image: selimhorri/api-gateway-ecommerce-boot:0.1.0
+    image: alejolonber/api-gateway:test
     ports:
       - 8080:8080
+    networks:
+      - microservices
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
+      <<: *common-spring-env
   proxy-client-container:
-    image: selimhorri/proxy-client-ecommerce-boot:0.1.0
+    image: alejolonber/proxy-client:test
     ports:
       - 8900:8900
+    networks:
+      - microservices
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
+      <<: *common-spring-env
   order-service-container:
-    image: selimhorri/order-service-ecommerce-boot:0.1.0
+    image: alejolonber/order-service:test
     ports:
       - 8300:8300
+    networks:
+      - microservices
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
+      <<: *common-spring-env
   payment-service-container:
-    image: selimhorri/payment-service-ecommerce-boot:0.1.0
+    image: alejolonber/payment-service:test
     ports:
       - 8400:8400
+    networks:
+      - microservices
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
+      <<: *common-spring-env
   product-service-container:
-    image: selimhorri/product-service-ecommerce-boot:0.1.0
+    image: alejolonber/product-service:test
     ports:
       - 8500:8500
+    networks:
+      - microservices
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
+      <<: *common-spring-env
   shipping-service-container:
-    image: selimhorri/shipping-service-ecommerce-boot:0.1.0
+    image: alejolonber/shipping-service:test
     ports:
       - 8600:8600
+    networks:
+      - microservices
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
+      <<: *common-spring-env
   user-service-container:
-    image: selimhorri/user-service-ecommerce-boot:0.1.0
+    image: alejolonber/user-service:test
     ports:
       - 8700:8700
+    networks:
+      - microservices
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
+      <<: *common-spring-env
   favourite-service-container:
-    image: selimhorri/favourite-service-ecommerce-boot:0.1.0
+    image: alejolonber/favourite-service:test
     ports:
       - 8800:8800
+    networks:
+      - microservices
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-
-
-
+      <<: *common-spring-env
+networks:
+  microservices:
+    driver: bridge
