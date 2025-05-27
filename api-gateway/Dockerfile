@@ -18,7 +18,7 @@ ARG GROUP_ID=1001
 
 ENV SPRING_PROFILES_ACTIVE=${ENVIRONMENT}
 ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseContainerSupport"
-ENV SERVER_PORT=8222
+ENV SERVER_PORT=8080
 
 RUN groupadd -g ${GROUP_ID} appuser && \
     useradd -r -u ${USER_ID} -g appuser appuser
